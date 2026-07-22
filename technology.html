@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التقنية خلف مسار | Rust + C++ + WebAssembly</title>
+<meta name="description" content="نظرة من الداخل على محرك التسعير المبني بلغة Rust ومحرك التتبع المبني بلغة C++، وكلاهما يعمل داخل المتصفح عبر WebAssembly.">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+  .tech-hero{ position:relative; overflow:hidden; padding-block:56px 30px; }
+  .tech-orb{ position:absolute; border-radius:50%; filter:blur(40px); opacity:.35; z-index:0; }
+  .tech-orb.o1{ width:280px;height:280px; background:var(--yellow); top:-60px; inset-inline-end:6%; }
+  .tech-orb.o2{ width:220px;height:220px; background:var(--coral); bottom:-40px; inset-inline-start:8%; }
+  .tech-hero .wrap{ position:relative; z-index:1; }
+
+  .arch-wrap{ display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:14px; align-items:center; margin-top:36px; }
+  .arch-box{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; text-align:center; box-shadow:var(--shadow-sm); }
+  .arch-box .arch-icon{ width:56px;height:56px;border-radius:14px; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-size:26px; }
+  .arch-box.js .arch-icon{ background:#FFF3D6; }
+  .arch-box.rust .arch-icon{ background:#3d2b1f; }
+  .arch-box.cpp .arch-icon{ background:#1a2f4d; }
+  .arch-box h4{ color:var(--petrol); font-size:16px; margin-bottom:6px; }
+  .arch-box p{ font-size:12.5px; color:var(--muted); }
+  .arch-arrow{ font-size:22px; color:var(--coral); text-align:center; }
+  @media (max-width:860px){
+    .arch-wrap{ grid-template-columns:1fr; }
+    .arch-arrow{ transform:rotate(90deg); }
+  }
+
+  .bench-panel{ background:var(--petrol); border-radius:20px; padding:32px; color:#fff; }
+  .bench-bars{ margin-block:24px; display:flex; flex-direction:column; gap:18px; }
+  .bench-label{ display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px; font-weight:700; }
+  .bench-label .ms{ font-family:var(--font-mono); color:var(--yellow); }
+  .bench-track{ height:14px; background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden; }
+  .bench-fill{ height:100%; border-radius:999px; width:0%; transition:width 1s cubic-bezier(.2,.8,.2,1); }
+  .bench-fill.wasm{ background:linear-gradient(90deg,var(--yellow),#ffe08a); }
+  .bench-fill.js{ background:linear-gradient(90deg,var(--coral),#ff9d9d); }
+  .bench-result{ text-align:center; margin-top:10px; font-size:15px; }
+  .bench-result b{ color:var(--yellow); font-family:var(--font-mono); font-size:20px; }
+
+  .code-tabs{ display:flex; gap:8px; margin-bottom:0; }
+  .code-tab{ padding:12px 20px; border:none; background:#1e1e1e; color:#888; font-weight:700; font-size:13.5px; border-radius:12px 12px 0 0; }
+  .code-tab.active{ background:#282c34; color:#fff; }
+  .code-panel-wrap{ background:#282c34; border-radius:0 16px 16px 16px; overflow:hidden; }
+  html[dir="rtl"] .code-panel-wrap{ border-radius:16px 0 16px 16px; }
+  .code-panel{ display:none; max-height:520px; overflow:auto; }
+  .code-panel.active{ display:block; }
+  .code-panel pre{ margin:0; padding:22px; direction:ltr; text-align:left; }
+  .code-panel code{ font-family:var(--font-mono); font-size:12.8px; line-height:1.7; }
+
+  .status-badge{ display:inline-flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--border); padding:8px 16px; border-radius:999px; font-size:13px; font-weight:700; color:var(--teal-mid); }
+  .status-dot{ width:8px; height:8px; border-radius:50%; background:#2ecc71; }
+  .status-dot.warn{ background:#f5a623; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="brand-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12L21 4L14 12L21 20L3 12Z" fill="#FFC93C"/></svg></span>
+      <span data-i18n="brand">مسار</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" data-i18n="nav_home">الرئيسية</a>
+      <a href="calculator.html" data-i18n="nav_calc">احسب السعر</a>
+      <a href="tracking.html" data-i18n="nav_track">تتبع الشحنة</a>
+      <a href="contact.html" data-i18n="nav_contact">تواصل معنا</a>
+      <a href="technology.html" aria-current="page" data-i18n="nav_tech">التقنية</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button data-lang="ar">AR</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ur">UR</button>
+      </div>
+      <a href="calculator.html" class="btn btn-primary btn-sm" data-i18n="nav_cta">اطلب عرض سعر</a>
+      <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="tech-hero">
+  <div class="tech-orb o1"></div>
+  <div class="tech-orb o2"></div>
+  <div class="wrap" style="max-width:760px;text-align:center;margin-inline:auto">
+    <span class="eyebrow" style="margin-inline:auto"><span class="dot"></span> <span data-i18n="tech_eyebrow">من الداخل</span></span>
+    <h1 style="font-size:clamp(28px,4.2vw,46px);color:var(--petrol)" data-i18n="tech_h1">التقنية خلف مسار</h1>
+    <p class="lede" style="margin-inline:auto" data-i18n="tech_lede">واجهة الموقع HTML وCSS وJavaScript، لكن الحسابات الحساسة تشتغل في وحدتين مُصرَّفتين إلى WebAssembly مباشرة: محرك تسعير بلغة Rust، ومحرك تتبع بلغة ++C — بدون أي إطار عمل وسيط.</p>
+    <div id="engineStatus" style="margin-top:18px"></div>
+  </div>
+</section>
+
+<section class="wrap section-tight">
+  <div class="sec-head center">
+    <h2 data-i18n="tech_arch_h">كيف تتحدث الطبقات مع بعضها</h2>
+  </div>
+  <div class="arch-wrap">
+    <div class="arch-box js">
+      <div class="arch-icon">🖥️</div>
+      <h4 data-i18n="tech_arch_js_h">الواجهة</h4>
+      <p data-i18n="tech_arch_js_p">HTML + CSS + JavaScript — النماذج، التصميم، وتبديل اللغة.</p>
+    </div>
+    <div class="arch-arrow">⇄</div>
+    <div class="arch-box rust">
+      <div class="arch-icon">⚙️</div>
+      <h4 data-i18n="tech_arch_rust_h">محرك الأسعار</h4>
+      <p data-i18n="tech_arch_rust_p">Rust مُصرَّف إلى WebAssembly — الوزن الحجمي، الأسعار المتدرجة، التأمين.</p>
+    </div>
+    <div class="arch-arrow">⇄</div>
+    <div class="arch-box cpp">
+      <div class="arch-icon">🔩</div>
+      <h4 data-i18n="tech_arch_cpp_h">محرك التتبع</h4>
+      <p data-i18n="tech_arch_cpp_p">++C حر (بدون مكتبات) مُصرَّف إلى WebAssembly — دالة hash لتحديد حالة الشحنة.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section-tight">
+  <div class="bench-panel">
+    <div class="sec-head" style="max-width:100%;margin-bottom:12px">
+      <h2 style="color:#fff" data-i18n="tech_bench_h">اختبار سرعة حي</h2>
+      <p style="color:rgba(255,255,255,0.75)" data-i18n="tech_bench_p">شغّل المقارنة الآن وشاهد الفرق الحقيقي بين WebAssembly وJavaScript، في متصفحك أنت.</p>
+    </div>
+    <button class="btn btn-primary" id="runBenchBtn" data-i18n="tech_bench_run">شغّل الاختبار الآن</button>
+
+    <div class="bench-bars">
+      <div class="bench-row">
+        <div class="bench-label"><span data-i18n="tech_bench_wasm">WebAssembly</span><span class="ms" id="wasmMs">-</span></div>
+        <div class="bench-track"><div class="bench-fill wasm" id="wasmFill"></div></div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span data-i18n="tech_bench_js">JavaScript</span><span class="ms" id="jsMs">-</span></div>
+        <div class="bench-track"><div class="bench-fill js" id="jsFill"></div></div>
+      </div>
+    </div>
+    <div class="bench-result" id="benchResult" style="display:none">
+      <span data-i18n="tech_bench_iterations">عدد العمليات</span>: <b id="benchIters">0</b> —
+      <span data-i18n="tech_bench_faster">أسرع بـ</span> <b id="benchSpeedup">0×</b>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section-tight">
+  <div class="sec-head center">
+    <h2 data-i18n="tech_code_h">شاهد الكود الفعلي</h2>
+    <p data-i18n="tech_code_p">هذا هو الكود المُصرَّف والمُشغَّل فعليًا في هذه الصفحة الآن — بدون تعديل.</p>
+  </div>
+  <div class="code-tabs">
+    <button class="code-tab active" data-code="rust" data-i18n="tech_code_rust_tab">محرك الأسعار (Rust)</button>
+    <button class="code-tab" data-code="cpp" data-i18n="tech_code_cpp_tab">محرك التتبع (++C)</button>
+  </div>
+  <div class="code-panel-wrap">
+    <div class="code-panel active" data-panel="rust"><pre><code class="language-rust">#![no_std]
+
+#[panic_handler]
+fn panic(_info: &amp;core::panic::PanicInfo) -> ! {
+    core::arch::wasm32::unreachable()
+}
+
+/// Volumetric weight per air-freight industry standard: (L*W*H in cm) / 5000
+#[no_mangle]
+pub extern "C" fn volumetric_weight(l: f64, w: f64, h: f64) -> f64 {
+    if l &lt;= 0.0 || w &lt;= 0.0 || h &lt;= 0.0 { return 0.0; }
+    (l * w * h) / 5000.0
+}
+
+#[no_mangle]
+pub extern "C" fn max_f64(a: f64, b: f64) -> f64 {
+    if a > b { a } else { b }
+}
+
+/// Core tiered-rate calculation shared by all shipment categories.
+/// Returns the shipping-only subtotal (before flat add-ons).
+#[no_mangle]
+pub extern "C" fn tiered_price(
+    base: f64,
+    included_kg: f64,
+    per_kg: f64,
+    billable_weight: f64,
+    cold_fee: f64,
+    express_fee: f64,
+) -> f64 {
+    let extra = if billable_weight > included_kg { billable_weight - included_kg } else { 0.0 };
+    base + extra * per_kg + cold_fee + express_fee
+}
+
+#[no_mangle]
+pub extern "C" fn insurance_fee(declared_value: f64, rate: f64, min_fee: f64) -> f64 {
+    if declared_value &lt;= 0.0 { return 0.0; }
+    let v = declared_value * rate;
+    max_f64(v, min_fee)
+}
+
+/// Rounds to 2 decimal places without std (manual banker-free rounding).
+#[no_mangle]
+pub extern "C" fn round2(n: f64) -> f64 {
+    let scaled = n * 100.0;
+    let floor = (scaled as i64) as f64;
+    let diff = scaled - floor;
+    let rounded = if diff >= 0.5 { floor + 1.0 } else { floor };
+    rounded / 100.0
+}
+
+#[no_mangle]
+pub extern "C" fn direct_price(shipping_subtotal: f64, direct_factor: f64) -> f64 {
+    round2(shipping_subtotal * direct_factor)
+}
+
+#[no_mangle]
+pub extern "C" fn savings_amount(direct_total: f64, our_total: f64) -> f64 {
+    let d = direct_total - our_total;
+    if d > 0.0 { round2(d) } else { 0.0 }
+}
+</code></pre></div>
+    <div class="code-panel" data-panel="cpp"><pre><code class="language-cpp">// Masar tracking resolver — freestanding C++ compiled directly to WebAssembly
+// (no libc, no emscripten): a deterministic polynomial hash turns any
+// tracking code into a consistent pseudo-shipment state.
+extern "C" {
+
+// Static scratch buffer JS writes the tracking code's UTF-16 units into
+// before calling masar_hash. No allocator needed since this is a fixed,
+// generously-sized buffer (freestanding module, no libc/malloc).
+static unsigned short g_buffer[256];
+
+unsigned short* masar_buffer_ptr() {
+    return g_buffer;
+}
+
+// 32-bit FNV-1a-style polynomial hash over the raw UTF-16 code units
+// passed in from JS (avoids needing any string/libc support here).
+unsigned int masar_hash(int len) {
+    unsigned int h = 2166136261u;
+    for (int i = 0; i &lt; len &amp;&amp; i &lt; 256; i++) {
+        h ^= (unsigned int)g_buffer[i];
+        h *= 16777619u;
+    }
+    return h;
+}
+
+// Which of the 6 timeline stages (0..5) this tracking code is currently at.
+int masar_stage(unsigned int hash) {
+    return (int)(hash % 6u);
+}
+
+// Index into the JS-side carrier list.
+int masar_carrier_index(unsigned int hash, int carrierCount) {
+    if (carrierCount &lt;= 0) return 0;
+    return (int)(hash % (unsigned int)carrierCount);
+}
+
+// Index into the JS-side destination list.
+int masar_dest_index(unsigned int hash, int destCount) {
+    if (destCount &lt;= 0) return 0;
+    return (int)((hash / 7u) % (unsigned int)destCount);
+}
+
+// Days from "today" until estimated delivery, factoring in current stage
+// (further along the timeline = fewer days remaining).
+int masar_eta_days(unsigned int hash, int stage) {
+    int remaining = 5 - stage;
+    if (remaining &lt; 0) remaining = 0;
+    int jitter = (int)(hash % 3u);
+    return remaining + jitter;
+}
+
+} // extern "C"
+</code></pre></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head center">
+      <h2 data-i18n="tech_why_h">ليش Rust و++C بالذات؟</h2>
+    </div>
+    <div class="grid grid-4">
+      <div class="card"><div class="icon-badge">🛡️</div><h3 data-i18n="tech_why1_h">أمان الذاكرة</h3><p data-i18n="tech_why1_p">Rust يمنع أخطاء الذاكرة الشائعة وقت الترجمة، وهذا يهم في محرك يحسب فلوس حقيقية.</p></div>
+      <div class="card"><div class="icon-badge">🪶</div><h3 data-i18n="tech_why2_h">حجم صغير جدًا</h3><p data-i18n="tech_why2_p">وحدة ++C الحرة (بدون مكتبات) حجمها أقل من كيلوبايت واحد — تحميل فوري.</p></div>
+      <div class="card"><div class="icon-badge">⚡</div><h3 data-i18n="tech_why3_h">سرعة قريبة من الآلة</h3><p data-i18n="tech_why3_p">WebAssembly يشتغل بسرعة قريبة من الكود الأصلي، أسرع بكثير من JavaScript المفسَّر لحسابات مكثفة.</p></div>
+      <div class="card"><div class="icon-badge">🎯</div><h3 data-i18n="tech_why4_h">نفس النتيجة دائمًا</h3><p data-i18n="tech_why4_p">حسابات حتمية 100% — نفس المدخلات تعطي نفس السعر دائمًا، بدون مفاجآت.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section-tight">
+  <div class="cta-band">
+    <h2 data-i18n="tech_cta_h">جرّب المحرك بنفسك</h2>
+    <p data-i18n="tech_cta_p">احسب سعر شحنة حقيقية أو تتبع شحنة، وشوف Rust وC++ يشتغلون لحظيًا.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="calculator.html" class="btn btn-primary" data-i18n="tech_cta_calc">جرّب الحاسبة</a>
+      <a href="tracking.html" class="btn btn-ghost" style="border-color:#fff;color:#fff" data-i18n="tech_cta_track">جرّب التتبع</a>
+    </div>
+  </div>
+</section>
+
+<footer style="margin-top:20px">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span data-i18n="foot_rights">© 2026 مسار. جميع الحقوق محفوظة.</span>
+      <span data-i18n="foot_madeby">صُنع بحب لتجار السعودية 🇸🇦</span>
+    </div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="calculator.js"></script>
+<script src="tracking.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  if (window.hljs) { document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el)); }
+
+  // Code tabs
+  document.querySelectorAll('.code-tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.code-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.code-panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelector(`.code-panel[data-panel="${tab.dataset.code}"]`).classList.add('active');
+    });
+  });
+
+  // Engine status badge (real check, not decorative)
+  (async function(){
+    const wasm = await masarLoadWasm();
+    const el = document.getElementById('engineStatus');
+    function paint(){
+      const d = MASAR_DICT[masarGetLang()];
+      el.innerHTML = wasm
+        ? `<span class="status-badge"><span class="status-dot"></span>${d.tech_engine_badge}</span>`
+        : `<span class="status-badge"><span class="status-dot warn"></span>${d.tech_engine_badge_js}</span>`;
+    }
+    paint();
+    window.addEventListener('masar:langchange', paint);
+  })();
+
+  // Live benchmark: real timed comparison of the WASM exports vs equivalent JS
+  document.getElementById('runBenchBtn').addEventListener('click', async ()=>{
+    const btn = document.getElementById('runBenchBtn');
+    const dict = MASAR_DICT[masarGetLang()];
+    btn.textContent = dict.tech_bench_running;
+    btn.disabled = true;
+
+    await new Promise(r => setTimeout(r, 30)); // let the UI repaint before the tight loop
+
+    const wasm = await masarLoadWasm();
+    const trackWasm = await masarLoadTrackWasm();
+    const N = 300000;
+
+    let wasmMs, jsMs;
+
+    if (wasm && trackWasm) {
+      // WASM path: tiered_price (Rust) + masar_hash (C++) combined per iteration
+      const mem = new Uint16Array(trackWasm.memory.buffer);
+      const ptr = trackWasm.masar_buffer_ptr() / 2;
+      const sample = "MS-774213-SA";
+      for (let i=0;i<sample.length;i++) mem[ptr+i] = sample.charCodeAt(i);
+
+      const t0 = performance.now();
+      for (let i=0;i<N;i++){
+        wasm.tiered_price(19, 5, 4, 8.5, 15, 10);
+        trackWasm.masar_hash(sample.length);
+      }
+      wasmMs = performance.now() - t0;
+    } else {
+      wasmMs = null;
+    }
+
+    // JS equivalent path (same math, pure JavaScript)
+    function jsTieredPrice(base, includedKg, perKg, billableWeight, coldFee, expressFee){
+      const extra = billableWeight > includedKg ? billableWeight - includedKg : 0;
+      return base + extra * perKg + coldFee + expressFee;
+    }
+    const t1 = performance.now();
+    for (let i=0;i<N;i++){
+      jsTieredPrice(19, 5, 4, 8.5, 15, 10);
+      masarHashJS("MS-774213-SA");
+    }
+    jsMs = performance.now() - t1;
+
+    const maxMs = Math.max(wasmMs || jsMs, jsMs);
+    document.getElementById('wasmFill').style.width = wasmMs ? ((wasmMs/maxMs)*100) + '%' : '0%';
+    document.getElementById('jsFill').style.width = ((jsMs/maxMs)*100) + '%';
+    document.getElementById('wasmMs').textContent = wasmMs ? wasmMs.toFixed(1) + ' ms' : 'n/a';
+    document.getElementById('jsMs').textContent = jsMs.toFixed(1) + ' ms';
+
+    document.getElementById('benchResult').style.display = 'block';
+    document.getElementById('benchIters').textContent = N.toLocaleString();
+    document.getElementById('benchSpeedup').textContent = wasmMs ? (jsMs / wasmMs).toFixed(2) + '×' : '-';
+
+    btn.textContent = dict.tech_bench_run;
+    btn.disabled = false;
+  });
+</script>
+</body>
+</html>

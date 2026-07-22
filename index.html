@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسار | وساطة شحن محلية ودولية بأسعار تنافسية</title>
+<meta name="description" content="مسار تجمع لك أفضل أسعار الشحن المحلي والدولي من كبرى شركات الشحن في مكان واحد، بما فيها الشحن إلى السودان عبر تاركو.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="brand-badge">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12L21 4L14 12L21 20L3 12Z" fill="#FFC93C"/></svg>
+      </span>
+      <span data-i18n="brand">مسار</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" aria-current="page" data-i18n="nav_home">الرئيسية</a>
+      <a href="calculator.html" data-i18n="nav_calc">احسب السعر</a>
+      <a href="tracking.html" data-i18n="nav_track">تتبع الشحنة</a>
+      <a href="contact.html" data-i18n="nav_contact">تواصل معنا</a>
+      <a href="technology.html" data-i18n="nav_tech">التقنية</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button data-lang="ar">AR</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ur">UR</button>
+      </div>
+      <a href="calculator.html" class="btn btn-primary btn-sm" data-i18n="nav_cta">اطلب عرض سعر</a>
+      <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><span class="dot"></span> <span data-i18n="hero_eyebrow">منصة وساطة الشحن الأولى لتجار السعودية</span></span>
+      <h1><span data-i18n="hero_h1_1">اشحن أذكى.</span> <span data-i18n="hero_h1_2">وفّر أكثر.</span></h1>
+      <p class="lede" data-i18n="hero_lede">مسار تجمع لك أفضل أسعار البريد السعودي، أرامكس، زاجل، DHL وFedEx — محليًا ودوليًا، وحتى السودان عبر تاركو، في مكان واحد.</p>
+      <div class="hero-ctas">
+        <a href="calculator.html" class="btn btn-primary" data-i18n="hero_cta1">احسب سعر شحنتك</a>
+        <a href="tracking.html" class="btn btn-ghost" data-i18n="hero_cta2">تتبّع شحنتك</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><b data-i18n="hero_stat1_n">5</b><span data-i18n="hero_stat1_l">شركات شحن متعاقدة</span></div>
+        <div class="hero-stat"><b data-i18n="hero_stat2_n">٪30</b><span data-i18n="hero_stat2_l">متوسط التوفير</span></div>
+        <div class="hero-stat"><b data-i18n="hero_stat3_n">0</b><span data-i18n="hero_stat3_l">حد أدنى للكمية</span></div>
+      </div>
+    </div>
+    <div class="label-card-wrap">
+      <div class="floaty f1">💰 <span data-i18n="floaty1">وفّرت 42 ريال</span></div>
+      <div class="floaty f2">✅ <span data-i18n="floaty2">تم التسليم ✓</span></div>
+      <div class="label-card">
+        <div class="stamp" data-i18n="label_speed">سريع</div>
+        <div class="label-top">
+          <span class="tag" data-i18n="label_tag">شحنة مؤكدة</span>
+        </div>
+        <div class="label-route">
+          <b data-i18n="label_from">من: الرياض</b>
+          <span class="arrow">→</span>
+          <b data-i18n="label_to">إلى: 190+ وجهة</b>
+        </div>
+        <div class="label-track" data-i18n="label_track">رقم التتبع: MS-774213-SA</div>
+        <div class="barcode" id="heroBarcode"></div>
+        <div class="label-foot">
+          <span data-i18n="label_weight">الوزن: 3.4 كجم</span>
+          <span>SAUDI ARABIA</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="airmail"></div>
+
+<section class="trust-bar">
+  <div class="wrap trust-row">
+    <span class="trust-label" data-i18n="trust_label">نتعاقد مباشرة مع كبرى شركات الشحن</span>
+    <div class="trust-logos">
+      <span class="trust-chip">Saudi Post (SPL)</span>
+      <span class="trust-chip">Aramex</span>
+      <span class="trust-chip">Zajil</span>
+      <span class="trust-chip">DHL</span>
+      <span class="trust-chip">FedEx</span>
+      <span class="trust-chip">Tarco</span>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="kicker" data-i18n="services_kicker">خدماتنا</span>
+      <h2 data-i18n="services_h2">كل أنواع الشحن، بسعر واحد عادل</h2>
+      <p data-i18n="services_p">من طرد صغير داخل حيّك إلى حاوية مبرّدة للخليج — مسار توفّر لك الخيار المناسب.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="icon-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 7l9-4 9 4-9 4-9-4z" stroke="currentColor" stroke-width="2"/><path d="M3 7v10l9 4 9-4V7" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3 data-i18n="svc1_h">شحن محلي جاف</h3>
+        <p data-i18n="svc1_p">توصيل سريع بين كل مدن المملكة عبر SPL، أرامكس وزاجل.</p>
+        <span class="price-tag" data-i18n="svc1_price">من 15 ريال</span>
+      </div>
+      <div class="card">
+        <div class="icon-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3 data-i18n="svc2_h">شحن محلي مبرّد</h3>
+        <p data-i18n="svc2_p">سلسلة تبريد متكاملة للمنتجات الغذائية والدوائية الحساسة.</p>
+        <span class="price-tag" data-i18n="svc2_price">من 30 ريال</span>
+      </div>
+      <div class="card">
+        <div class="icon-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3a14 14 0 010 18 14 14 0 010-18z" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3 data-i18n="svc3_h">شحن دولي</h3>
+        <p data-i18n="svc3_p">إلى دول الخليج، آسيا، أوروبا وأمريكا عبر DHL وFedEx وSPL الدولي.</p>
+        <span class="price-tag" data-i18n="svc3_price">من 70 ريال</span>
+      </div>
+      <div class="card accent">
+        <div class="icon-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3><span data-i18n="svc4_h">الشحن إلى السودان</span><span class="badge-new">Tarco</span></h3>
+        <p data-i18n="svc4_p">بري أو جوي عبر تاركو — الخرطوم وكل الولايات.</p>
+        <span class="price-tag" data-i18n="svc4_price">من 45 ريال</span>
+      </div>
+      <div class="card">
+        <div class="icon-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 10l9-7 9 7v9a2 2 0 01-2 2H5a2 2 0 01-2-2v-9z" stroke="currentColor" stroke-width="2"/></svg></div>
+        <h3 data-i18n="svc5_h">استلام من الباب</h3>
+        <p data-i18n="svc5_p">فريقنا يجيك لمنزلك أو متجرك، ما تحتاج تطلع من بيتك.</p>
+        <span class="price-tag" data-i18n="svc5_price">+27 ريال فقط</span>
+      </div>
+      <div class="card">
+        <div class="icon-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div>
+        <h3 data-i18n="svc6_h">توصيل سريع</h3>
+        <p data-i18n="svc6_p">شحنتك تتحرك أولوية قبل غيرها — خلال ساعات لا أيام.</p>
+        <span class="price-tag" data-i18n="svc6_price">يبدأ من +10 ريال</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="kicker" data-i18n="how_kicker">كيف تعمل مسار</span>
+      <h2 data-i18n="how_h2">من طلبك إلى وجهته، في 5 خطوات</h2>
+    </div>
+    <div class="route">
+      <div class="route-step"><div class="route-num">1</div><h4 data-i18n="how1_h">نتعاقد بالجملة</h4><p data-i18n="how1_p">نحصل على أسعار تفضيلية من كبرى شركات الشحن.</p></div>
+      <div class="route-step"><div class="route-num">2</div><h4 data-i18n="how2_h">تطلب بثوانٍ</h4><p data-i18n="how2_p">عبر الموقع، واتساب أو تطبيقنا.</p></div>
+      <div class="route-step"><div class="route-num">3</div><h4 data-i18n="how3_h">نستلم شحنتك</h4><p data-i18n="how3_p">من مكتبك، أو نأتي إلى باب متجرك.</p></div>
+      <div class="route-step"><div class="route-num">4</div><h4 data-i18n="how4_h">نسلّم للناقل</h4><p data-i18n="how4_p">بسعرنا التفضيلي المتعاقد عليه.</p></div>
+      <div class="route-step"><div class="route-num">5</div><h4 data-i18n="how5_h">أنت توفر</h4><p data-i18n="how5_p">تدفع أقل من التعاقد المباشر، دائمًا.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="airmail thin"></div></div>
+
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="kicker" data-i18n="why_kicker">لماذا مسار</span>
+      <h2 data-i18n="why_h2">مصمّمة لتاجر اليوم</h2>
+    </div>
+    <div class="grid grid-4">
+      <div class="card">
+        <div class="icon-badge">💰</div>
+        <h3 data-i18n="why1_h">توفير حقيقي</h3>
+        <p data-i18n="why1_p">أسعار جملة تقارَن تلقائيًا لتختار الأرخص لكل شحنة.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">📦</div>
+        <h3 data-i18n="why2_h">بدون حد أدنى</h3>
+        <p data-i18n="why2_p">اشحن قطعة واحدة أو ألف قطعة، بنفس الشفافية.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">📍</div>
+        <h3 data-i18n="why3_h">تتبع لحظي</h3>
+        <p data-i18n="why3_p">تابع شحناتك المحلية والدولية من مكان واحد.</p>
+      </div>
+      <div class="card">
+        <div class="icon-badge">🌐</div>
+        <h3 data-i18n="why4_h">دعم بثلاث لغات</h3>
+        <p data-i18n="why4_p">نتحدث العربية والإنجليزية والأردية لخدمة الجميع.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="kicker" data-i18n="price_kicker">الأسعار</span>
+      <h2 data-i18n="price_h2">شفافة تمامًا، من أول ريال</h2>
+      <p data-i18n="price_p">مقارنة حيّة بين السعر المباشر وسعر مسار لأشهر المسارات.</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="local" data-i18n="tab_local">محلي</button>
+      <button class="tab-btn" data-tab="intl" data-i18n="tab_intl">دولي</button>
+      <button class="tab-btn" data-tab="sudan" data-i18n="tab_sudan">السودان</button>
+    </div>
+
+    <div class="tab-panel active" data-panel="local">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="name-cell" data-i18n="th_route">المسار</th><th data-i18n="th_direct">السعر المباشر</th><th data-i18n="th_masar">سعر مسار</th><th data-i18n="th_save">توفيرك</th></tr></thead>
+          <tbody>
+            <tr><td class="name-cell" data-i18n="local_r1">داخل المدينة (SPL)</td><td>18–20</td><td>17</td><td>1–3</td></tr>
+            <tr><td class="name-cell" data-i18n="local_r2">بين المدن (SPL)</td><td>22–25</td><td>20</td><td>1–3</td></tr>
+            <tr><td class="name-cell" data-i18n="local_r3">داخل المدينة (أرامكس)</td><td>25–28</td><td>22</td><td>2–4</td></tr>
+            <tr><td class="name-cell" data-i18n="local_r4">بين المدن (أرامكس)</td><td>30–35</td><td>27</td><td>2–5</td></tr>
+            <tr><td class="name-cell" data-i18n="local_r5">داخل المدينة (زاجل)</td><td>17–20</td><td>15</td><td>1–3</td></tr>
+            <tr><td class="name-cell" data-i18n="local_r6">بين المدن (زاجل)</td><td>20–25</td><td>18</td><td>1–3</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="intl">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="name-cell" data-i18n="th_route">المسار</th><th data-i18n="th_direct">السعر المباشر</th><th data-i18n="th_masar">سعر مسار</th><th data-i18n="th_save">توفيرك</th></tr></thead>
+          <tbody>
+            <tr><td class="name-cell" data-i18n="intl_r1">دول الخليج</td><td>80–110</td><td>70–90</td><td>10–20</td></tr>
+            <tr><td class="name-cell" data-i18n="intl_r2">آسيا</td><td>150–180</td><td>120–160</td><td>10–20</td></tr>
+            <tr><td class="name-cell" data-i18n="intl_r3">أوروبا</td><td>180–220</td><td>150–190</td><td>20–30</td></tr>
+            <tr><td class="name-cell" data-i18n="intl_r4">أمريكا / كندا</td><td>250–300</td><td>180–230</td><td>20–30</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="sudan">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th class="name-cell" data-i18n="th_route">المسار</th><th data-i18n="th_direct">السعر المباشر</th><th data-i18n="th_masar">سعر مسار</th><th data-i18n="th_save">توفيرك</th></tr></thead>
+          <tbody>
+            <tr><td class="name-cell" data-i18n="sudan_r1">الخرطوم — بري (تاركو)</td><td>55</td><td>45</td><td>10</td></tr>
+            <tr><td class="name-cell" data-i18n="sudan_r2">الخرطوم — جوي (تاركو)</td><td>145</td><td>120</td><td>25</td></tr>
+            <tr><td class="name-cell" data-i18n="sudan_r3">ولايات أخرى — بري (تاركو)</td><td>65</td><td>52</td><td>13</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:14px" data-i18n="price_note">* الأسعار الدولية وأسعار السودان تقديرية وتخضع للتأكيد النهائي حسب الوزن والوجهة الدقيقة.</p>
+    <div style="text-align:center;margin-top:28px">
+      <a href="calculator.html" class="btn btn-secondary" data-i18n="price_cta">احسب سعر شحنتك بالتفصيل</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section-tight">
+  <div class="cta-band">
+    <h2 data-i18n="cta_h2">جاهز توفّر على شحناتك؟</h2>
+    <p data-i18n="cta_p">انضم لمئات التجار الذين قلّلوا فاتورة الشحن مع مسار.</p>
+    <a href="calculator.html" class="btn btn-primary" data-i18n="cta_btn">ابدأ الآن مجانًا</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand" style="color:#fff"><span class="brand-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12L21 4L14 12L21 20L3 12Z" fill="#FFC93C"/></svg></span> <span data-i18n="brand">مسار</span></div>
+        <p data-i18n="foot_about_p">مسار هي منصة وساطة شحن سعودية تجمع أفضل الأسعار من كبرى الناقلين المحليين والدوليين في مكان واحد.</p>
+        <div class="social-row">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="Instagram">◎</a>
+          <a href="#" aria-label="WhatsApp">☎</a>
+        </div>
+      </div>
+      <div>
+        <h4 data-i18n="foot_links">روابط سريعة</h4>
+        <ul>
+          <li><a href="index.html" data-i18n="nav_home">الرئيسية</a></li>
+          <li><a href="calculator.html" data-i18n="nav_calc">احسب السعر</a></li>
+          <li><a href="tracking.html" data-i18n="nav_track">تتبع الشحنة</a></li>
+          <li><a href="technology.html" data-i18n="nav_tech">التقنية</a></li>
+          <li><a href="contact.html" data-i18n="nav_contact">تواصل معنا</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="foot_services">خدماتنا</h4>
+        <ul>
+          <li><a href="calculator.html" data-i18n="svc1_h">شحن محلي جاف</a></li>
+          <li><a href="calculator.html" data-i18n="svc3_h">شحن دولي</a></li>
+          <li><a href="calculator.html" data-i18n="svc4_h">الشحن إلى السودان</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="foot_contact">تواصل</h4>
+        <ul>
+          <li><span data-i18n="foot_addr">الرياض، المملكة العربية السعودية</span></li>
+          <li><span dir="ltr" style="unicode-bidi:plaintext">+966 11 234 5678</span></li>
+          <li><span dir="ltr" style="unicode-bidi:plaintext">hello@masar.sa</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span data-i18n="foot_rights">© 2026 مسار. جميع الحقوق محفوظة.</span>
+      <span data-i18n="foot_madeby">صُنع بحب لتجار السعودية 🇸🇦</span>
+    </div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+  // Hero shipping-label barcode (purely decorative, deterministic pattern)
+  (function(){
+    const el = document.getElementById('heroBarcode');
+    const widths = [3,1,2,4,1,3,2,1,4,2,1,3,2,4,1,2,3,1,2,4,1,3,2,1,4];
+    widths.forEach(w=>{
+      const bar = document.createElement('i');
+      bar.style.width = w + 'px';
+      el.appendChild(bar);
+    });
+  })();
+
+  // Pricing tabs
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تواصل معنا | مسار</title>
+<meta name="description" content="تواصل مع فريق مسار لأي استفسار حول الشحن المحلي والدولي.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="brand-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12L21 4L14 12L21 20L3 12Z" fill="#FFC93C"/></svg></span>
+      <span data-i18n="brand">مسار</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" data-i18n="nav_home">الرئيسية</a>
+      <a href="calculator.html" data-i18n="nav_calc">احسب السعر</a>
+      <a href="tracking.html" data-i18n="nav_track">تتبع الشحنة</a>
+      <a href="contact.html" aria-current="page" data-i18n="nav_contact">تواصل معنا</a>
+      <a href="technology.html" data-i18n="nav_tech">التقنية</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button data-lang="ar">AR</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ur">UR</button>
+      </div>
+      <a href="calculator.html" class="btn btn-primary btn-sm" data-i18n="nav_cta">اطلب عرض سعر</a>
+      <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" style="padding-block:48px 10px">
+  <div class="wrap" style="max-width:760px;text-align:center;margin-inline:auto">
+    <span class="eyebrow" style="margin-inline:auto"><span class="dot"></span> <span data-i18n="contact_eyebrow">تواصل معنا</span></span>
+    <h1 style="font-size:clamp(28px,4vw,44px)" data-i18n="contact_h1">عندك سؤال؟ نحن نسمع.</h1>
+    <p class="lede" style="margin-inline:auto" data-i18n="contact_lede">فريقنا يرد خلال ساعات العمل، أو راسلنا واتساب لرد أسرع.</p>
+  </div>
+</section>
+
+<section class="wrap section-tight">
+  <div class="contact-grid">
+    <form class="panel" id="contactForm">
+      <div class="field">
+        <label data-i18n="c_name">الاسم الكامل</label>
+        <input class="input" type="text" id="cName" required>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label data-i18n="c_phone">رقم الجوال</label>
+          <input class="input" type="tel" id="cPhone" required>
+        </div>
+        <div class="field">
+          <label data-i18n="c_email">البريد الإلكتروني</label>
+          <input class="input" type="email" id="cEmail" required>
+        </div>
+      </div>
+      <div class="field">
+        <label data-i18n="c_msg">رسالتك</label>
+        <textarea class="input" id="cMsg" rows="5" style="resize:vertical" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" data-i18n="c_submit">إرسال الطلب</button>
+    </form>
+
+    <div>
+      <div class="panel">
+        <h3 style="color:var(--petrol)" data-i18n="c_info_h">معلومات التواصل</h3>
+        <div class="info-list">
+          <div class="row">
+            <div class="ic">📍</div>
+            <div><b data-i18n="c_addr_h">المكتب الرئيسي</b><span data-i18n="c_addr_v">حي العليا، الرياض، المملكة العربية السعودية</span></div>
+          </div>
+          <div class="row">
+            <div class="ic">📞</div>
+            <div><b data-i18n="c_phone_h">الهاتف / واتساب</b><span dir="ltr" style="unicode-bidi:plaintext">+966 11 234 5678</span></div>
+          </div>
+          <div class="row">
+            <div class="ic">✉️</div>
+            <div><b data-i18n="c_email_h">البريد الإلكتروني</b><span dir="ltr" style="unicode-bidi:plaintext">hello@masar.sa</span></div>
+          </div>
+          <div class="row">
+            <div class="ic">🕐</div>
+            <div><b data-i18n="c_hours_h">ساعات العمل</b><span data-i18n="c_hours_v">الأحد – الخميس، 9ص – 7م</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:20px;padding:0;overflow:hidden">
+        <iframe title="Masar office location" src="https://www.google.com/maps?q=Riyadh+Al+Olaya&output=embed" width="100%" height="220" style="border:0;display:block" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap section-tight" style="max-width:760px">
+  <div class="sec-head center">
+    <h2 data-i18n="faq_h2">أسئلة شائعة</h2>
+  </div>
+  <div id="faqList">
+    <div class="faq-item">
+      <button class="faq-q"><span data-i18n="faq_q1">هل يوجد حد أدنى لعدد الشحنات؟</span><span class="plus">+</span></button>
+      <div class="faq-a"><div class="faq-a-in" data-i18n="faq_a1">لا إطلاقًا، يمكنك شحن قطعة واحدة فقط بنفس الأسعار التنافسية.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span data-i18n="faq_q2">هل تدعمون الشحن المبرد؟</span><span class="plus">+</span></button>
+      <div class="faq-a"><div class="faq-a-in" data-i18n="faq_a2">نعم، نوفر سلسلة تبريد متكاملة للمنتجات الغذائية والدوائية محليًا ودوليًا.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span data-i18n="faq_q3">كم تستغرق الشحنة للسودان؟</span><span class="plus">+</span></button>
+      <div class="faq-a"><div class="faq-a-in" data-i18n="faq_a3">بريًا عبر تاركو 5–8 أيام تقريبًا، وجويًا 2–3 أيام تقريبًا حسب الوجهة.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span data-i18n="faq_q4">هل تقدمون استلام من المنزل أو المتجر؟</span><span class="plus">+</span></button>
+      <div class="faq-a"><div class="faq-a-in" data-i18n="faq_a4">نعم، مقابل رسوم ثابتة 27 ريال فقط لكل عملية استلام.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer style="margin-top:20px">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span data-i18n="foot_rights">© 2026 مسار. جميع الحقوق محفوظة.</span>
+      <span data-i18n="foot_madeby">صُنع بحب لتجار السعودية 🇸🇦</span>
+    </div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script>
+  document.getElementById('contactForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const lang = masarGetLang();
+    masarToast(MASAR_DICT[lang].c_toast);
+    e.target.reset();
+  });
+</script>
+</body>
+</html>

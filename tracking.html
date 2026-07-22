@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تتبع شحنتك | مسار</title>
+<meta name="description" content="أدخل رقم التتبع الخاص بشحنتك وتابع حالتها لحظة بلحظة.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="brand-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12L21 4L14 12L21 20L3 12Z" fill="#FFC93C"/></svg></span>
+      <span data-i18n="brand">مسار</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" data-i18n="nav_home">الرئيسية</a>
+      <a href="calculator.html" data-i18n="nav_calc">احسب السعر</a>
+      <a href="tracking.html" aria-current="page" data-i18n="nav_track">تتبع الشحنة</a>
+      <a href="contact.html" data-i18n="nav_contact">تواصل معنا</a>
+      <a href="technology.html" data-i18n="nav_tech">التقنية</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button data-lang="ar">AR</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ur">UR</button>
+      </div>
+      <a href="calculator.html" class="btn btn-primary btn-sm" data-i18n="nav_cta">اطلب عرض سعر</a>
+      <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="track-hero">
+  <div class="wrap">
+    <span class="eyebrow" style="margin-inline:auto"><span class="dot"></span> <span data-i18n="track_eyebrow">تتبع شحنتك</span></span>
+    <h1 style="font-size:clamp(28px,4vw,44px);color:var(--petrol)" data-i18n="track_h1">وين وصلت شحنتي؟</h1>
+    <p class="lede" style="margin-inline:auto" data-i18n="track_lede">أدخل رقم التتبع الخاص بك وتابع كل خطوة بخطوة، لحظة بلحظة.</p>
+
+    <form class="track-form" id="trackForm">
+      <input type="text" id="trackInput" data-i18n-ph="track_placeholder" placeholder="مثال: MS-774213-SA" autocomplete="off">
+      <button type="submit" class="btn btn-primary" data-i18n="track_btn">تتبّع</button>
+    </form>
+    <p class="hint" style="margin-top:14px">
+      <span data-i18n="track_try">جرّب برقم تجريبي:</span>
+      <a href="#" id="sampleBtn" style="color:var(--teal-mid);font-weight:700;font-family:var(--font-mono)">MS-774213-SA</a>
+    </p>
+  </div>
+</section>
+
+<section class="wrap section-tight" style="max-width:720px">
+  <div class="panel" id="resultWrap" style="display:none">
+    <div class="route-map">
+      <div class="pt"><span id="fromLabel">Riyadh</span><span data-i18n="track_from">الرياض، السعودية</span></div>
+      <div class="line"></div>
+      <div class="pt"><span id="toLabel">—</span><span data-i18n="track_to">الوجهة</span></div>
+    </div>
+
+    <div class="breakdown-row"><span data-i18n="track_carrier">الناقل المسؤول</span><b id="carrierName">-</b></div>
+    <div class="breakdown-row"><span data-i18n="track_eta">موعد التسليم المتوقع</span><b id="etaDate">-</b></div>
+
+    <div class="timeline">
+      <div class="timeline-track" id="timelineTrack"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="emptyWrap">
+    <p class="hint" style="text-align:center" data-i18n="track_notfound">أدخل رقم تتبع لعرض الحالة.</p>
+  </div>
+</section>
+
+<footer style="margin-top:40px">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span data-i18n="foot_rights">© 2026 مسار. جميع الحقوق محفوظة.</span>
+      <span data-i18n="foot_madeby">صُنع بحب لتجار السعودية 🇸🇦</span>
+    </div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="tracking.js"></script>
+<script>
+(function(){
+  const stageIcons = ['📝','📦','🏭','🚚','🛵','✅'];
+
+  function render(record){
+    const lang = masarGetLang();
+    const dict = MASAR_DICT[lang];
+    const labels = [dict.t1, dict.t2, dict.t3, dict.t4, dict.t5, dict.t6];
+
+    document.getElementById('emptyWrap').style.display = 'none';
+    document.getElementById('resultWrap').style.display = 'block';
+    document.getElementById('toLabel').textContent = record.dest[lang] || record.dest.ar;
+    document.getElementById('carrierName').textContent = record.carrier;
+    document.getElementById('etaDate').textContent = record.eta.toLocaleDateString(lang === 'ar' ? 'ar-SA' : (lang === 'ur' ? 'ur-PK' : 'en-US'), { year:'numeric', month:'long', day:'numeric' });
+
+    const track = document.getElementById('timelineTrack');
+    track.innerHTML = '';
+    labels.forEach((label, i)=>{
+      const item = document.createElement('div');
+      item.className = 't-item' + (i < record.stage ? ' done' : (i === record.stage ? ' current' : ''));
+      item.innerHTML = `
+        <div class="t-line"></div>
+        <div class="t-dot">${i <= record.stage ? stageIcons[i] : ''}</div>
+        <div class="t-body"><b>${label}</b><span>${i <= record.stage ? '●' : ''}</span></div>
+      `;
+      track.appendChild(item);
+    });
+  }
+
+  document.getElementById('trackForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const val = document.getElementById('trackInput').value;
+    const record = await masarResolveTracking(val);
+    if(record) render(record);
+  });
+
+  document.getElementById('sampleBtn').addEventListener('click', async (e)=>{
+    e.preventDefault();
+    document.getElementById('trackInput').value = 'MS-774213-SA';
+    const record = await masarResolveTracking('MS-774213-SA');
+    if(record) render(record);
+  });
+
+  // Re-render with the currently displayed tracking code when language changes
+  window.addEventListener('masar:langchange', async ()=>{
+    const val = document.getElementById('trackInput').value;
+    if(val && document.getElementById('resultWrap').style.display !== 'none'){
+      const record = await masarResolveTracking(val);
+      if(record) render(record);
+    }
+  });
+})();
+</script>
+</body>
+</html>

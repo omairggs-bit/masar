@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>احسب سعر شحنتك | مسار</title>
+<meta name="description" content="حاسبة أسعار ذكية تحتسب الوزن الفعلي والحجمي، رسوم التبريد والسرعة، وتقارنها تلقائيًا بسعر الحجز المباشر.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  @keyframes priceReveal{ 0%{ transform:scale(0.85); opacity:0; } 60%{ transform:scale(1.04); opacity:1; } 100%{ transform:scale(1); } }
+  .result-total.pulse .amount{ animation:priceReveal .45s cubic-bezier(.2,.8,.2,1); }
+  .status-badge{ display:inline-flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--border); padding:7px 15px; border-radius:999px; font-size:12.5px; font-weight:700; color:var(--teal-mid); }
+  .status-dot{ width:7px; height:7px; border-radius:50%; background:#2ecc71; }
+  .status-dot.warn{ background:#f5a623; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="brand-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12L21 4L14 12L21 20L3 12Z" fill="#FFC93C"/></svg></span>
+      <span data-i18n="brand">مسار</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" data-i18n="nav_home">الرئيسية</a>
+      <a href="calculator.html" aria-current="page" data-i18n="nav_calc">احسب السعر</a>
+      <a href="tracking.html" data-i18n="nav_track">تتبع الشحنة</a>
+      <a href="contact.html" data-i18n="nav_contact">تواصل معنا</a>
+      <a href="technology.html" data-i18n="nav_tech">التقنية</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button data-lang="ar">AR</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="ur">UR</button>
+      </div>
+      <a href="contact.html" class="btn btn-primary btn-sm" data-i18n="nav_cta">اطلب عرض سعر</a>
+      <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" style="padding-block:48px 10px;overflow:hidden;position:relative">
+  <div style="position:absolute;width:260px;height:260px;border-radius:50%;filter:blur(45px);opacity:.3;background:var(--yellow);top:-70px;inset-inline-end:4%;z-index:0"></div>
+  <div style="position:absolute;width:200px;height:200px;border-radius:50%;filter:blur(40px);opacity:.28;background:var(--coral);bottom:-50px;inset-inline-start:6%;z-index:0"></div>
+  <div class="wrap" style="max-width:760px;text-align:center;margin-inline:auto;position:relative;z-index:1">
+    <span class="eyebrow" style="margin-inline:auto"><span class="dot"></span> <span data-i18n="calc_eyebrow">حاسبة الأسعار الذكية</span></span>
+    <h1 style="font-size:clamp(28px,4vw,44px)" data-i18n="calc_h1">احسب تكلفة شحنتك خلال ثوانٍ</h1>
+    <p class="lede" style="margin-inline:auto" data-i18n="calc_lede">محرك تسعير حقيقي يحتسب الوزن الفعلي والحجمي، رسوم التبريد والسرعة، ويقارنها تلقائيًا بالسعر المباشر.</p>
+    <div id="engineBadge" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<section class="wrap section-tight">
+  <div class="calc-layout">
+    <!-- FORM -->
+    <form class="panel" id="calcForm">
+      <div class="field">
+        <label data-i18n="f_type">نوع الشحنة</label>
+        <div class="segmented" id="typeSeg">
+          <button type="button" class="active" data-val="local" data-i18n="f_type_local">محلي</button>
+          <button type="button" data-val="intl" data-i18n="f_type_intl">دولي</button>
+          <button type="button" data-val="sudan" data-i18n="f_type_sudan">السودان</button>
+        </div>
+      </div>
+
+      <div class="field" id="localField">
+        <label data-i18n="f_local_route">المسار</label>
+        <select class="input" id="localRoute">
+          <option value="same" data-i18n="f_local_same">داخل نفس المدينة</option>
+          <option value="between" data-i18n="f_local_between">بين المدن</option>
+        </select>
+      </div>
+
+      <div class="field" id="intlField" style="display:none">
+        <label data-i18n="f_intl_zone">الوجهة</label>
+        <select class="input" id="intlZone">
+          <option value="gulf" data-i18n="f_zone_gulf">دول الخليج</option>
+          <option value="asia" data-i18n="f_zone_asia">آسيا</option>
+          <option value="europe" data-i18n="f_zone_europe">أوروبا</option>
+          <option value="america" data-i18n="f_zone_america">أمريكا / كندا</option>
+        </select>
+      </div>
+
+      <div class="field" id="sudanField" style="display:none">
+        <label data-i18n="f_sudan_mode">طريقة النقل</label>
+        <div class="segmented" id="sudanSeg">
+          <button type="button" class="active" data-val="land" data-i18n="f_sudan_land">بري (تاركو)</button>
+          <button type="button" data-val="air" data-i18n="f_sudan_air">جوي (تاركو)</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label data-i18n="f_weight">الوزن الفعلي (كجم)</label>
+        <input class="input" type="number" id="weight" min="0" step="0.1" value="2" required>
+      </div>
+
+      <div class="field">
+        <label data-i18n="f_dims">الأبعاد (اختياري) — لحساب الوزن الحجمي</label>
+        <div class="row3">
+          <input class="input" type="number" id="dimL" min="0" placeholder="0" data-i18n-ph="f_l">
+          <input class="input" type="number" id="dimW" min="0" placeholder="0" data-i18n-ph="f_w">
+          <input class="input" type="number" id="dimH" min="0" placeholder="0" data-i18n-ph="f_h">
+        </div>
+        <div class="hint" id="dimLabels">
+          <span data-i18n="f_l">الطول (سم)</span> · <span data-i18n="f_w">العرض (سم)</span> · <span data-i18n="f_h">الارتفاع (سم)</span>
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <div class="t-text"><b>❄️ <span data-i18n="f_cold">شحن مبرّد</span></b><span data-i18n="f_cold_hint">للمنتجات الغذائية أو الدوائية الحساسة للحرارة</span></div>
+        <label class="switch"><input type="checkbox" id="coldChk"><span class="track"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="t-text"><b>⚡ <span data-i18n="f_express">توصيل سريع</span></b><span data-i18n="f_express_hint">أولوية في المعالجة والنقل</span></div>
+        <label class="switch"><input type="checkbox" id="expressChk"><span class="track"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="t-text"><b>🚪 <span data-i18n="f_pickup">استلام من الباب</span></b><span data-i18n="f_pickup_hint">فريقنا يمر عليك — إضافة ثابتة 27 ريال</span></div>
+        <label class="switch"><input type="checkbox" id="pickupChk"><span class="track"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="t-text"><b>📦 <span data-i18n="f_pack">تغليف احترافي إضافي</span></b><span data-i18n="f_pack_hint">تغليف مقوى لحماية إضافية (+10 ريال)</span></div>
+        <label class="switch"><input type="checkbox" id="packChk"><span class="track"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="t-text"><b>🛡️ <span data-i18n="f_insure">تأمين الشحنة</span></b><span data-i18n="f_insure_hint">1.5% من القيمة المصرّحة (حد أدنى 5 ريال)</span></div>
+        <label class="switch"><input type="checkbox" id="insureChk"><span class="track"></span></label>
+      </div>
+      <div class="field" id="valueField" style="display:none">
+        <label data-i18n="f_value">القيمة المصرّحة (ريال)</label>
+        <input class="input" type="number" id="declaredValue" min="0" value="0">
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" data-i18n="calc_btn">احسب السعر الآن</button>
+    </form>
+
+    <!-- RESULT -->
+    <div class="panel sticky" id="resultPanel">
+      <h3 style="color:var(--petrol);margin-bottom:6px" data-i18n="res_title">تفاصيل السعر</h3>
+      <p class="hint" id="resultEmpty" data-i18n="res_empty">عبّي البيانات على اليسار واضغط احسب السعر لعرض التفاصيل هنا.</p>
+
+      <div id="resultBody" style="display:none">
+        <div class="savings-badge">
+          <span>💚</span>
+          <span><span data-i18n="res_save_prefix">توفّرت</span> <span class="pct" id="savePct">0%</span> — <b id="saveAmt">0</b> <span data-i18n="res_save_suffix">مقارنة بالتعاقد المباشر</span></span>
+        </div>
+        <div class="result-total">
+          <div class="amount"><span id="totalPrice">0</span> <span class="currency">SAR</span></div>
+        </div>
+        <div class="breakdown">
+          <div class="breakdown-row"><span data-i18n="res_base">السعر الأساسي (حتى 5 كجم)</span><b id="rowBase">0</b></div>
+          <div class="breakdown-row"><span data-i18n="res_extra_w">وزن إضافي</span><b id="rowExtra">0</b></div>
+          <div class="breakdown-row" id="rowVolWrap" style="display:none"><span data-i18n="res_vol">الوزن الحجمي المحتسب</span><b id="rowVol">0</b></div>
+          <div class="breakdown-row" id="rowColdWrap" style="display:none"><span data-i18n="res_cold">رسوم التبريد</span><b id="rowCold">0</b></div>
+          <div class="breakdown-row" id="rowExpWrap" style="display:none"><span data-i18n="res_express">رسوم التوصيل السريع</span><b id="rowExp">0</b></div>
+          <div class="breakdown-row" id="rowPickupWrap" style="display:none"><span data-i18n="res_pickup">استلام من الباب</span><b id="rowPickup">0</b></div>
+          <div class="breakdown-row" id="rowPackWrap" style="display:none"><span data-i18n="res_pack">تغليف احترافي</span><b id="rowPack">0</b></div>
+          <div class="breakdown-row" id="rowInsWrap" style="display:none"><span data-i18n="res_insure">تأمين الشحنة</span><b id="rowIns">0</b></div>
+        </div>
+        <div class="breakdown-row"><span data-i18n="res_eta">المدة المتوقعة</span><b id="rowEta">-</b></div>
+        <a href="#" target="_blank" class="btn btn-secondary btn-block" style="margin-top:16px" id="whatsappBtn" data-i18n="res_whatsapp">اطلب عبر واتساب</a>
+        <p class="hint" style="text-align:center;margin-top:10px" data-i18n="res_note">* هذا احتساب تقديري وقد يختلف بسيط حسب الفحص الفعلي للشحنة.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="margin-top:40px">
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span data-i18n="foot_rights">© 2026 مسار. جميع الحقوق محفوظة.</span>
+      <span data-i18n="foot_madeby">صُنع بحب لتجار السعودية 🇸🇦</span>
+    </div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="calculator.js"></script>
+<script>
+(function(){
+  let currentType = 'local';
+  let currentSudanMode = 'land';
+
+  // Real engine status (not decorative) — reflects whether WASM actually loaded
+  (async function(){
+    const wasm = await masarLoadWasm();
+    const el = document.getElementById('engineBadge');
+    function paint(){
+      const d = MASAR_DICT[masarGetLang()];
+      el.innerHTML = wasm
+        ? `<span class="status-badge"><span class="status-dot"></span>${d.tech_engine_badge}</span>`
+        : `<span class="status-badge"><span class="status-dot warn"></span>${d.tech_engine_badge_js}</span>`;
+    }
+    paint();
+    window.addEventListener('masar:langchange', paint);
+  })();
+
+  const typeSeg = document.getElementById('typeSeg');
+  const sudanSeg = document.getElementById('sudanSeg');
+  const localField = document.getElementById('localField');
+  const intlField = document.getElementById('intlField');
+  const sudanField = document.getElementById('sudanField');
+  const insureChk = document.getElementById('insureChk');
+  const valueField = document.getElementById('valueField');
+
+  typeSeg.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      typeSeg.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentType = btn.dataset.val;
+      localField.style.display = currentType === 'local' ? '' : 'none';
+      intlField.style.display = currentType === 'intl' ? '' : 'none';
+      sudanField.style.display = currentType === 'sudan' ? '' : 'none';
+    });
+  });
+
+  sudanSeg.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      sudanSeg.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSudanMode = btn.dataset.val;
+    });
+  });
+
+  insureChk.addEventListener('change', ()=>{
+    valueField.style.display = insureChk.checked ? '' : 'none';
+  });
+
+  function fmt(n){
+    return new Intl.NumberFormat('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}).format(n);
+  }
+
+  document.getElementById('calcForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+
+    let category = currentType;
+    let subtype;
+    if(category === 'local') subtype = document.getElementById('localRoute').value;
+    else if(category === 'intl') subtype = document.getElementById('intlZone').value;
+    else subtype = currentSudanMode;
+
+    const input = {
+      category, subtype,
+      actualWeight: parseFloat(document.getElementById('weight').value) || 0,
+      length: parseFloat(document.getElementById('dimL').value) || 0,
+      width: parseFloat(document.getElementById('dimW').value) || 0,
+      height: parseFloat(document.getElementById('dimH').value) || 0,
+      cold: document.getElementById('coldChk').checked,
+      express: document.getElementById('expressChk').checked,
+      pickup: document.getElementById('pickupChk').checked,
+      packaging: document.getElementById('packChk').checked,
+      insure: insureChk.checked,
+      declaredValue: parseFloat(document.getElementById('declaredValue').value) || 0,
+    };
+
+    const result = await masarCalculate(input);
+    const lang = masarGetLang();
+    const dict = MASAR_DICT[lang];
+
+    document.getElementById('resultEmpty').style.display = 'none';
+    document.getElementById('resultBody').style.display = 'block';
+    document.querySelector('.result-total').classList.remove('pulse');
+    void document.querySelector('.result-total').offsetWidth; // restart animation
+    document.querySelector('.result-total').classList.add('pulse');
+
+    document.getElementById('totalPrice').textContent = fmt(result.total);
+    document.getElementById('savePct').textContent = result.savingsPct + '%';
+    document.getElementById('saveAmt').textContent = fmt(result.savings) + ' SAR';
+    document.getElementById('rowBase').textContent = fmt(result.base) + ' SAR';
+    document.getElementById('rowExtra').textContent = fmt(result.extraWeightFee) + ' SAR';
+    document.getElementById('rowEta').textContent = result.eta[lang] || result.eta.ar;
+
+    const volWrap = document.getElementById('rowVolWrap');
+    if(result.volumetric > 0){
+      volWrap.style.display = 'flex';
+      document.getElementById('rowVol').textContent = result.volumetric.toFixed(2) + ' kg';
+    } else volWrap.style.display = 'none';
+
+    toggleRow('rowColdWrap','rowCold', result.coldFee);
+    toggleRow('rowExpWrap','rowExp', result.expressFee);
+    toggleRow('rowPickupWrap','rowPickup', result.pickupFee);
+    toggleRow('rowPackWrap','rowPack', result.packFee);
+    toggleRow('rowInsWrap','rowIns', result.insuranceFee);
+
+    function toggleRow(wrapId, valId, val){
+      const wrap = document.getElementById(wrapId);
+      if(val > 0){
+        wrap.style.display = 'flex';
+        document.getElementById(valId).textContent = fmt(val) + ' SAR';
+      } else wrap.style.display = 'none';
+    }
+
+    const waText = encodeURIComponent(`مرحبًا مسار، أريد شحن طرد — التكلفة المقدرة ${fmt(result.total)} ريال.`);
+    document.getElementById('whatsappBtn').href = `https://wa.me/966112345678?text=${waText}`;
+
+    document.getElementById('resultPanel').scrollIntoView({ behavior:'smooth', block:'nearest' });
+  });
+})();
+</script>
+</body>
+</html>
